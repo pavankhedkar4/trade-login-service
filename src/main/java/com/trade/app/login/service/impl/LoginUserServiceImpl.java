@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.trade.app.login.dto.LoginUserRequest;
+import com.trade.app.login.dto.LoginUserResponseDTO;
 import com.trade.app.login.entity.LoginUser;
 import com.trade.app.login.exception.LoginUserCommonException;
 import com.trade.app.login.exception.UserAlreadyExist;
@@ -33,6 +35,20 @@ public class LoginUserServiceImpl implements LoginUserService {
 		}
 
 		return null;
+	}
+
+	@Override
+	public LoginUserResponseDTO loginUser(LoginUserRequest loginUserRequest) {
+		// TODO Auto-generated method stub
+		return loginUserRepository
+		        .findByUsername(loginUserRequest.username())
+		        .filter(user -> user.getPassword().equals(loginUserRequest.password()))
+		        .map(user -> authenticateUser(loginUserRequest))
+		        .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+	}
+
+	private LoginUserResponseDTO authenticateUser(LoginUserRequest loginUserRequest) {
+		return new LoginUserResponseDTO("auth-token");
 	}
 
 }
