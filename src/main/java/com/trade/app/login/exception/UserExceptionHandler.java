@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Configuration
 public class UserExceptionHandler {
 
-	@ExceptionHandler(exception = UserAlreadyExist.class)
+	@ExceptionHandler(UserAlreadyExist.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
 	public LoginUserException getUserNotPresentException(UserAlreadyExist exception, HttpServletRequest request) {
