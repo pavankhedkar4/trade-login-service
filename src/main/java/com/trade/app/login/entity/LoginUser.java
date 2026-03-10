@@ -33,15 +33,26 @@ public class LoginUser {
 
 	private UserRole role = UserRole.USER;
 
+	private String name;
+
+	private String emailId;
+
+	private String upstockId;
+
 	public LoginUser() {
 	}
 
-	public LoginUser(long id, String username, String password, UserRole role) {
+	public LoginUser(long id, String username,
+			@Size(min = 8, message = "Password must be at least 8 characters long") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character") String password,
+			UserRole role, String name, String emailId, String upstockId) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.role = role;
+		this.name = name;
+		this.emailId = emailId;
+		this.upstockId = upstockId;
 	}
 
 	public long getId() {
@@ -74,6 +85,30 @@ public class LoginUser {
 
 	public void setRole(UserRole role) {
 		this.role = role;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getUpstockId() {
+		return upstockId;
+	}
+
+	public void setUpstockId(String upstockId) {
+		this.upstockId = upstockId;
 	}
 
 	@Override

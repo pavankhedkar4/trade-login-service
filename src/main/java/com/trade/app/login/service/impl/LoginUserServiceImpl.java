@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.trade.app.auth_lib.util.JwtUtil;
 import com.trade.app.login.dto.LoginUserRequest;
 import com.trade.app.login.dto.LoginUserResponseDTO;
 import com.trade.app.login.entity.LoginUser;
@@ -20,6 +21,9 @@ public class LoginUserServiceImpl implements LoginUserService {
 	@Autowired
 	LoginUserRepository loginUserRepository;
 
+	@Autowired
+	JwtUtil util;
+	
 	@Override
 	public LoginUser saveUser(LoginUser user) {
 		// TODO Auto-generated method stub
@@ -48,7 +52,8 @@ public class LoginUserServiceImpl implements LoginUserService {
 	}
 
 	private LoginUserResponseDTO authenticateUser(LoginUserRequest loginUserRequest) {
-		return new LoginUserResponseDTO("auth-token");
+		//util.generateToken(loginUserRequest.username());
+		return new LoginUserResponseDTO(util.generateToken(loginUserRequest.username()));
 	}
 
 }
