@@ -50,5 +50,11 @@ public class LoginController {
 		UpstockCode res = service.getAccessCode();
 		return new ResponseEntity<UpstockCode>(res, HttpStatus.OK);
 	}
+	
+	@GetMapping("/test")
+	public ResponseEntity<UpstockCode> getAccessTestCode() {
+		UpstockCode res = service.getAccessCode();
+		return new ResponseEntity<UpstockCode>(res, HttpStatus.OK);
+	}
 
 }
