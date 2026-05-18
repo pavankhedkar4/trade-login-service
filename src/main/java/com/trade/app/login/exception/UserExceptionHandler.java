@@ -27,7 +27,7 @@ public class UserExceptionHandler {
 		return exe;
 
 	}
-	
+
 	@ExceptionHandler(LoginUserCommonException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
@@ -36,24 +36,28 @@ public class UserExceptionHandler {
 				request.getRequestURI());
 		return exe;
 	}
-	
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<LoginUserException> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+	public ResponseEntity<LoginUserException> handleValidationErrors(MethodArgumentNotValidException ex,
+			HttpServletRequest request) {
 
-	    Map<String, String> errors = new HashMap<>();
+		Map<String, String> errors = new HashMap<>();
 
-	    ex.getBindingResult().getFieldErrors()
-	            .forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
+		ex.getBindingResult().getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
 
-	    LoginUserException apiError = new LoginUserException(
-	    		"Validation failed",
-	            "LU-002",
-	            request.getRequestURI()
-	    );
-	    apiError.setErrors(errors);
+		LoginUserException apiError = new LoginUserException("Validation failed", "LU-002", request.getRequestURI());
+		apiError.setErrors(errors);
 
-	    return ResponseEntity.badRequest().body(apiError);
+		return ResponseEntity.badRequest().body(apiError);
 	}
-	
 
+	@ExceptionHandler(MissingUpstockSecurityCodeException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<LoginUserException> handleMissingUpstockSecurityCodeException(
+			MissingUpstockSecurityCodeException ex, HttpServletRequest req) {
+		LoginUserException exe = new LoginUserException(ex.getMessage(), ex.getErrorId(),
+				req.getRequestURI());
+		return new ResponseEntity<>(exe, HttpStatus.BAD_REQUEST);
+	}
 }

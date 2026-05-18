@@ -1,38 +1,22 @@
 package com.trade.app.login.config;
-import java.time.Duration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 @Configuration
 public class RedisCacheConfig {
 
 	@Bean
-	public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
 
-	    ObjectMapper mapper = new ObjectMapper();
-	    mapper.registerModule(new JavaTimeModule());
+		RedisTemplate<String, Object> template = new RedisTemplate<>();
 
-	    GenericJackson2JsonRedisSerializer serializer =
-	            new GenericJackson2JsonRedisSerializer(mapper);
+		template.setConnectionFactory(connectionFactory);
 
-	    RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-	            .serializeValuesWith(
-	                    RedisSerializationContext.SerializationPair.fromSerializer(serializer)
-	            )
-	            .entryTtl(Duration.ofMinutes(1440))
-	            .disableCachingNullValues();
+		template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 
-	    return RedisCacheManager.builder(connectionFactory)
-	            .cacheDefaults(config)
-	            .build();
+		return template;
 	}
 }

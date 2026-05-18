@@ -1,12 +1,16 @@
 package com.trade.app.login.service.impl;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.trade.app.auth_lib.util.JwtUtil;
@@ -30,6 +34,12 @@ public class LoginUserServiceImpl implements LoginUserService {
 
 	@Autowired
 	RedisCacheManager redisCacheManager;
+
+	@Value("${upstock.code.key}")
+	private String cacheKey;
+
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Override
 	public LoginUser saveUser(LoginUser user) {
@@ -63,26 +73,23 @@ public class LoginUserServiceImpl implements LoginUserService {
 	}
 
 	@Override
-	@Cacheable(value = "upstockCode", key = "#code")
 	public UpstockCode saveAccessCode(String code) {
-		// TODO Auto-generated method stub
-		UpstockCode upstockNewCode = new UpstockCode();
-		try {
-			String op = (String) Optional.ofNullable(code).orElseThrow(() -> new Exception("Empty code"));
 
-			upstockNewCode.setCode(op);
-			upstockNewCode.setCreatedAt(LocalDateTime.now());
+		UpstockCode upstockCode = new UpstockCode();
+		upstockCode.setCode(code);
+		upstockCode.setCreatedAt(LocalDateTime.now().toString());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return upstockNewCode;
+		redisTemplate.opsForValue().set(cacheKey, upstockCode, Duration.ofMinutes(10));
+
+		return upstockCode;
 	}
 
 	@Override
 	public UpstockCode getAccessCode() {
 		// TODO Auto-generated method stub
-		return (UpstockCode) redisCacheManager.getCache("upstockCode").get("code");
-	}
+		Optional<UpstockCode> code = Optional.ofNullable((UpstockCode) redisTemplate.opsForValue().get(cacheKey));
+				
+		return code.orElseThrow(() -> new RuntimeException());
+		}
 
 }

@@ -1,5 +1,6 @@
 package com.trade.app.login.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -8,14 +9,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class UpstockCode {
+public class UpstockCode implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long codeId;
 
-	private LocalDateTime createdAt;
+	private String createdAt;
 
 	private String code;
 
@@ -23,17 +28,17 @@ public class UpstockCode {
 
 	}
 
-	public UpstockCode(Long codeId, LocalDateTime createdAt) {
+	public UpstockCode(Long codeId, String createdAt) {
 		super();
 		this.createdAt = createdAt;
 	}
 
-	public UpstockCode(LocalDateTime createdAt) {
+	public UpstockCode(String createdAt) {
 		super();
 		this.createdAt = createdAt;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public String getCreatedAt() {
 		return createdAt;
 	}
 
@@ -45,7 +50,7 @@ public class UpstockCode {
 		this.code = code;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
 
