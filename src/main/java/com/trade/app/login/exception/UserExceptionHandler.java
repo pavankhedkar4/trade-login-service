@@ -56,7 +56,7 @@ public class UserExceptionHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<LoginUserException> handleMissingUpstockSecurityCodeException(
 			MissingUpstockSecurityCodeException ex, HttpServletRequest req) {
-		LoginUserException exe = new LoginUserException(ex.getMessage(), ex.getErrorId(),
+		LoginUserException exe = new LoginUserException(ex.getMsg(), ex.getErrorId(),
 				req.getRequestURI());
 		return new ResponseEntity<>(exe, HttpStatus.BAD_REQUEST);
 	}

@@ -19,6 +19,7 @@ import com.trade.app.login.dto.LoginUserResponseDTO;
 import com.trade.app.login.entity.LoginUser;
 import com.trade.app.login.entity.UpstockCode;
 import com.trade.app.login.exception.LoginUserCommonException;
+import com.trade.app.login.exception.MissingUpstockSecurityCodeException;
 import com.trade.app.login.exception.UserAlreadyExist;
 import com.trade.app.login.repository.LoginUserRepository;
 import com.trade.app.login.service.LoginUserService;
@@ -89,7 +90,7 @@ public class LoginUserServiceImpl implements LoginUserService {
 		// TODO Auto-generated method stub
 		Optional<UpstockCode> code = Optional.ofNullable((UpstockCode) redisTemplate.opsForValue().get(cacheKey));
 				
-		return code.orElseThrow(() -> new RuntimeException());
+		return code.orElseThrow(() -> new MissingUpstockSecurityCodeException("Kindly validate the upstock account to get new access code", "Login-001"));
 		}
 
 }
