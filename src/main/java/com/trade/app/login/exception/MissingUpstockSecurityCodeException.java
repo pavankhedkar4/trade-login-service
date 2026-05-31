@@ -21,6 +21,11 @@ public class MissingUpstockSecurityCodeException extends RuntimeException{
 		this.apiPath = apiPath;
 	}
 
+	public MissingUpstockSecurityCodeException(String msg, String errorId) {
+		super();
+		this.msg = msg;
+		this.errorId = errorId;
+	}
 	public String getMsg() {
 		return msg;
 	}
